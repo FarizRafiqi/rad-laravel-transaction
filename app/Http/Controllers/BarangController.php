@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\MBarang;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -16,6 +16,7 @@ class BarangController extends Controller
             return redirect('/');
         }
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,8 +27,9 @@ class BarangController extends Controller
         if (!check_user_access(Session::get('user_access'), 'barang_manage')) {
             return redirect('/');
         }
-        $data = DB::table('m_barang')->get();
-        return view('m_barang.index',compact('data'));
+
+        $data = Barang::all();
+        return view('barang.index', compact('data'));
     }
 
     /**
@@ -42,13 +44,13 @@ class BarangController extends Controller
         }
 
         $data['actions'] = 'store';
-        return view('m_barang.barang', compact('data'));
+        return view('barang.barang', compact('data'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -57,7 +59,7 @@ class BarangController extends Controller
             return redirect('/');
         }
 
-        $barang = new MBarang();
+        $barang = new Barang();
         $barang->created_id = Auth::user()->id;
         $barang->updated_id = Auth::user()->id;
         $barang->nama = $request->nama;
@@ -70,7 +72,7 @@ class BarangController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -80,14 +82,14 @@ class BarangController extends Controller
         }
 
         $id = base64_decode($id);
-        $data['barang'] = MBarang::find($id);
-        return view('m_barang.show', compact('data'));
+        $data['barang'] = Barang::find($id);
+        return view('barang.show', compact('data'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -98,15 +100,15 @@ class BarangController extends Controller
 
         $id = base64_decode($id);
         $data['actions'] = 'update';
-        $data['barang'] = MBarang::find($id);
-        return view('m_barang.barang', compact('data'));
+        $data['barang'] = Barang::find($id);
+        return view('barang.barang', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -117,7 +119,7 @@ class BarangController extends Controller
 
         $id = base64_decode($id);
 
-        $barang = MBarang::find($id);
+        $barang = Barang::find($id);
         $barang->updated_id = Auth::user()->id;
         $barang->nama = $request->nama;
         $barang->keterangan = $request->keterangan;
@@ -130,13 +132,11 @@ class BarangController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
     }
-
-
 }

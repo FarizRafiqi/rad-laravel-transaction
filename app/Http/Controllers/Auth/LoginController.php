@@ -39,10 +39,12 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
     public function index()
     {
         return view('login');
     }
+
     public function authenticated()
     {
         $user_access = Auth::user()->access_group->access_masters;

@@ -4,14 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MBarang extends Model
+class Barang extends Model
 {
     public $table = 'm_barang';
-    protected $fillable = [
-        'nama',
-        'keterangan',
-        'status'
-    ];
+
+    protected $guarded = [];
 
     public function user_create()
     {

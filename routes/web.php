@@ -23,25 +23,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', [AuthController::class, 'index'])->name('login');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/barang', [BarangController::class, 'index']);
     Route::resource('barang', BarangController::class);
-
-    Route::get('/access_group', [AccessGroupController::class, 'index']);
     Route::resource('access_groups', AccessGroupController::class);
-
-    Route::get('/access_master', [AccessMasterController::class, 'index']);
     Route::resource('access_masters', AccessMasterController::class);
-
-    Route::get('/users', [UserController::class, 'index']);
     Route::resource('users', UserController::class);
-
-    Route::get('/order', [OrderController::class, 'index']);
     Route::resource('order', OrderController::class);
-
-    Route::get('/minta', [OrderController::class, 'index']);
     Route::resource('minta', MintaController::class);
 });
 

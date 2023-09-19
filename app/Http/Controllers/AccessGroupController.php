@@ -19,6 +19,7 @@ class AccessGroupController extends Controller
             return redirect('/');
         }
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -53,7 +54,7 @@ class AccessGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -77,8 +78,7 @@ class AccessGroupController extends Controller
         $access_group->keterangan = $request->keterangan;
 
         $access_detail = '';
-        foreach($request->access_masters as $access_master)
-        {
+        foreach ($request->access_masters as $access_master) {
             $access_master = AccessMaster::find($access_master);
             $access_detail .= $access_master->nama . ';;';
         }
@@ -99,7 +99,7 @@ class AccessGroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -116,7 +116,7 @@ class AccessGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -135,8 +135,8 @@ class AccessGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -183,7 +183,7 @@ class AccessGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
