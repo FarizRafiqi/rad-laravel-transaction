@@ -71,7 +71,7 @@
                     'order_manage') !== false)
                         @can('access', 'barang_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('barang.index') ? 'active' : '' }}" href="/barang">
+                                <a class="nav-link {{ Route::is('barang.*') ? 'active' : '' }}" href="/barang">
                                     <span data-feather="package"></span>
                                     Barang
                                 </a>
@@ -79,7 +79,7 @@
                         @endcan
                         @can('access', 'barang_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('order.index') ? 'active' : '' }}" href="/order">
+                                <a class="nav-link {{ Route::is('order.*') ? 'active' : '' }}" href="/order">
                                     <span data-feather="shopping-cart"></span>
                                     Order
                                 </a>
@@ -87,7 +87,7 @@
                         @endcan
                         @can('access', 'barang_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('minta.index') ? 'active' : '' }}" href="/minta">
+                                <a class="nav-link {{ Route::is('minta.*') ? 'active' : '' }}" href="/minta">
                                     <span data-feather="list"></span>
                                     Permintaan Pembelian
                                 </a>
@@ -99,7 +99,7 @@
                     'access_master_manage') !== false || strpos(Session::get('user_access'), 'users_manage') !== false)
                         @can('access', 'users_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('users.index') ? 'active' : '' }}" href="/users">
+                                <a class="nav-link {{ Route::is('users.*') ? 'active' : '' }}" href="/users">
                                     <span data-feather="users"></span>
                                     Users
                                 </a>
@@ -107,7 +107,7 @@
                         @endcan
                         @can('access', 'access_group_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('access_groups.index') ? 'active' : '' }}"
+                                <a class="nav-link {{ Route::is('access_groups.*') ? 'active' : '' }}"
                                    href="/access_group">
                                     <span data-feather="bar-chart-2"></span>
                                     Group Access
@@ -116,7 +116,7 @@
                         @endcan
                         @can('access', 'access_master_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('access_masters.index') ? 'active' : '' }}"
+                                <a class="nav-link {{ Route::is('access_masters.*') ? 'active' : '' }}"
                                    href="/access_master">
                                     <span data-feather="layers"></span>
                                     Access Master
