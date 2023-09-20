@@ -44,7 +44,7 @@ class BarangController extends Controller
         }
 
         $data['actions'] = 'store';
-        return view('barang.barang', compact('data'));
+        return view('barang.create-or-edit', compact('data'));
     }
 
     /**
@@ -75,14 +75,15 @@ class BarangController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Barang $barang)
     {
         if (!check_user_access(Session::get('user_access'), 'barang_read')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
-        $data['barang'] = Barang::find($id);
+        $id = base64_decode($barang->id);
+        $data['barang'] = $barang;
+
         return view('barang.show', compact('data'));
     }
 
@@ -92,16 +93,17 @@ class BarangController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Barang $barang)
     {
         if (!check_user_access(Session::get('user_access'), 'barang_update')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
+        $id = base64_decode($barang->id);
         $data['actions'] = 'update';
-        $data['barang'] = Barang::find($id);
-        return view('barang.barang', compact('data'));
+        $data['barang'] = $barang;
+
+        return view('barang.create-or-edit', compact('data'));
     }
 
     /**
@@ -111,19 +113,17 @@ class BarangController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Barang $barang)
     {
         if (!check_user_access(Session::get('user_access'), 'barang_update')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
+        $id = base64_decode($barang->id);
 
-        $barang = Barang::find($id);
         $barang->updated_id = Auth::user()->id;
         $barang->nama = $request->nama;
         $barang->keterangan = $request->keterangan;
-
         $barang->save();
 
         return redirect()->route('barang.index');
@@ -135,8 +135,9 @@ class BarangController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Barang $barang)
     {
-        //
+        $barang->delete();
+        return redirect()->route('barang.index');
     }
 }

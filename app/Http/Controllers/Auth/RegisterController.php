@@ -83,6 +83,7 @@ class RegisterController extends Controller
             foreach ($user_access as $_access) {
                 $access .= $_access->nama . ';;';
             }
+
             Session::put('user_access', $access);
         }
     }

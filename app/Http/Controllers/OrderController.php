@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Models\MOrder;
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
@@ -16,6 +16,7 @@ class OrderController extends Controller
             return redirect('/');
         }
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,12 +24,12 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'order_manage')) {
             return redirect('/');
         }
-        $data = DB::table('beli_order')->get();
-        return view('order.index',compact('data'));
+
+        $data = Order::all();
+        return view('order.index', compact('data'));
     }
 
     /**
@@ -38,7 +39,6 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'order_create')) {
             return redirect('/');
         }
@@ -50,116 +50,111 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'order_create')) {
             return redirect('/');
         }
 
-        $order = new MOrder();
-        $order->created_id = Auth::user()->id;
-        $order->updated_id = Auth::user()->id;
-        $order->no_faktur = $request->no_faktur;
-        $order->id_m_vendor = $request->id_m_vendor;
-        $order->id_user_verifikasi = $request->id_user_verifikasi;
-        $order->jumlah = $request->jumlah;
-        $order->ppn_percent = $request->ppn_percent;
-        $order->pp_nominal = $request->pp_nominal;
-        $order->total = $request->total;
-        $order->status = $request->status;
-        $order->tanggal = $request->tanggal;
-        $order->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
-
-
-        $order->save();
-
-        return redirect()->route('order.index');
+        $order = new Order();
+        return $this->updateOrCreate($request, $order);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'order_read')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
-        $data['beli_order'] = MOrder::find($id);
+        $data['beli_order'] = $order;
         return view('order.show', compact('data'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Order $order)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'order_update')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
         $data['actions'] = 'update';
-        $data['beli_order'] = MOrder::find($id);
+        $data['beli_order'] = $order;
+
         return view('order.order', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param Order $order
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Order $order)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'order_update')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
-
-        $order = MOrder::find($id);
-        $order->created_id = Auth::user()->id;
-        $order->updated_id = Auth::user()->id;
-        $order->no_faktur = $request->no_faktur;
-        $order->id_m_vendor = $request->id_m_vendor;
-        $order->id_user_verifikasi = $request->id_user_verifikasi;
-        $order->jumlah = $request->jumlah;
-        $order->ppn_percent = $request->ppn_percent;
-        $order->pp_nominal = $request->pp_nominal;
-        $order->total = $request->total;
-        $order->status = $request->status;
-        $order->tanggal = $request->tanggal;
-        $order->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
-
-        $order->save();
-
-        return redirect()->route('order.index');
+        return $this->updateOrCreate($request, $order);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Order $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Order $order)
     {
-        //
+        $order->delete();
+        return redirect()->route('orders.index');
+    }
+
+    /**
+     * @param Request $request
+     * @param Order $order
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function updateOrCreate(Request $request, Order $order)
+    {
+        $userId = Auth::user()->id;
+
+        DB::beginTransaction();
+        try {
+            $order->created_id = $userId;
+            $order->updated_id = $userId;
+            $order->no_faktur = $request->no_faktur;
+            $order->id_m_vendor = $request->id_m_vendor;
+            $order->id_user_verifikasi = $request->id_user_verifikasi;
+            $order->jumlah = $request->jumlah;
+            $order->ppn_percent = $request->ppn_percent;
+            $order->pp_nominal = $request->pp_nominal;
+            $order->total = $request->total;
+            $order->status = $request->status;
+            $order->tanggal = $request->tanggal;
+            $order->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
+            $order->save();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return redirect()->route('orders.index');
     }
 }

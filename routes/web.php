@@ -1,15 +1,14 @@
 <?php
 
-use App\AccessMaster;
 use App\Http\Controllers\AccessGroupController;
 use App\Http\Controllers\AccessMasterController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BarangController;
-use App\Http\Controllers\MintaController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
-use App\Models\AccessGroup;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,17 +21,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', [AuthController::class, 'index'])->name('login');
 
+Route::get('/', [HomeController::class, 'index'])->name('landing-page');
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/home', [DashboardController::class, 'index'])->name('home');
 
     Route::resource('barang', BarangController::class);
     Route::resource('access_groups', AccessGroupController::class);
     Route::resource('access_masters', AccessMasterController::class);
     Route::resource('users', UserController::class);
-    Route::resource('order', OrderController::class);
-    Route::resource('minta', MintaController::class);
+    Route::resource('orders', OrderController::class);
+    Route::resource('purchase-requests', PurchaseRequestController::class); // sblmnya 'minta'
 });
 
 Auth::routes();

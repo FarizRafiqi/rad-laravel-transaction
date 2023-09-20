@@ -15,10 +15,10 @@
                 <th>ID</th>
                 <th>Nama Barang</th>
                 <th>Keterangan</th>
-                <th>Created By</th>
-                <th>Updated By</th>
-                <th>Updated At</th>
                 <th>Created At</th>
+                <th>Created By</th>
+                <th>Updated At</th>
+                <th>Updated By</th>
                 <th>Status</th>
             </tr>
             </thead>
@@ -27,12 +27,20 @@
                 <tr>
                     <td>
                         @can('access', 'barang_update')
-                            <a href="{{ route('barang.edit', base64_encode($barang->id)) }}"
-                               class="btn btn-warning">Edit</a>
+                            <a href="{{ route('barang.edit', $barang->id) }}"
+                               class="btn btn-sm btn-warning mr-2">Edit</a>
                         @endcan
                         @can('access', 'barang_read')
-                            <a href="{{ route('barang.show', base64_encode($barang->id)) }}"
-                               class="btn btn-success">Show</a>
+                            <a href="{{ route('barang.show', $barang->id) }}"
+                               class="btn btn-sm btn-success mr-2 mt-2 mt-md-0">Show</a>
+                        @endcan
+                        @can('access', 'barang_delete')
+                            <button class="btn btn-sm btn-danger btn-delete mt-2 mt-md-0">Delete</button>
+                            <form class="delete-form" action="{{ route('barang.destroy', $barang->id) }}" method="POST"
+                                  class="d-none">
+                                @method('DELETE')
+                                @csrf
+                            </form>
                         @endcan
                     </td>
                     <td>{{ $barang->id }}</td>
@@ -51,3 +59,14 @@
         </table>
     </div>
 @endsection
+@push('script')
+    <script>
+        $('.btn-delete').on('click', function (event) {
+            event.preventDefault();
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapusnya?');
+            if (confirmDelete) {
+                $(this).siblings('.delete-form').submit();
+            }
+        });
+    </script>
+@endpush

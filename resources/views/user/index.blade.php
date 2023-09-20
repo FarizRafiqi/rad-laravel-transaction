@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'User')
 @section('content')
-    <h4>DAFTAR USER</h4>
+    <h4>Daftar User</h4>
     <div class="table-responsive">
         @can('access','users_create')
             <a class="btn btn-info mb-4" href="{{ route('users.create') }}">Tambah User</a>
@@ -24,11 +24,19 @@
                     <td>
                         @can('access', 'users_update')
                             <a href="{{ route('users.edit', base64_encode($users->id)) }}"
-                               class="btn btn-warning">Edit</a>
+                               class="btn btn-sm btn-warning">Edit</a>
                         @endcan
                         @can('access', 'users_read')
                             <a href="{{ route('users.show', base64_encode($users->id)) }}"
-                               class="btn btn-success">Show</a>
+                               class="btn btn-sm btn-success mx-2">Show</a>
+                        @endcan
+                        @can('access', 'users_delete')
+                            <button class="btn btn-sm btn-danger btn-delete">Delete</button>
+                            <form class="delete-form" action="{{ route('users.destroy', $users->id) }}" method="POST"
+                                  class="d-none">
+                                @method('DELETE')
+                                @csrf
+                            </form>
                         @endcan
                     </td>
                     <td>{{ $users->id }}</td>
@@ -44,3 +52,14 @@
         </table>
     </div>
 @endsection
+@push('script')
+    <script>
+        $('.btn-delete').on('click', function (event) {
+            event.preventDefault();
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapusnya?');
+            if (confirmDelete) {
+                $(this).siblings('.delete-form').submit();
+            }
+        });
+    </script>
+@endpush

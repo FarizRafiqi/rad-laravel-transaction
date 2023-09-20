@@ -57,7 +57,8 @@
 
 <div class="container-fluid">
     @auth
-        <nav id="sidebarMenu" class="{{ !Route::is(['login', 'register']) ? 'col-md-3 col-lg-2' : '' }} d-md-block bg-light sidebar collapse">
+        <nav id="sidebarMenu"
+             class="{{ !Route::is(['login', 'register']) ? 'col-md-3 col-lg-2' : '' }} d-md-block bg-light sidebar collapse">
             <div class="sidebar-sticky pt-3">
                 <ul class="nav flex-column">
                     <li class="nav-item">
@@ -71,7 +72,8 @@
                     'order_manage') !== false)
                         @can('access', 'barang_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('barang.*') ? 'active' : '' }}" href="/barang">
+                                <a class="nav-link {{ Route::is('barang.*') ? 'active' : '' }}"
+                                   href="{{ route('barang.index') }}">
                                     <span data-feather="package"></span>
                                     Barang
                                 </a>
@@ -79,7 +81,8 @@
                         @endcan
                         @can('access', 'barang_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('order.*') ? 'active' : '' }}" href="/order">
+                                <a class="nav-link {{ Route::is('orders.*') ? 'active' : '' }}"
+                                   href="{{ route('orders.index') }}">
                                     <span data-feather="shopping-cart"></span>
                                     Order
                                 </a>
@@ -87,7 +90,8 @@
                         @endcan
                         @can('access', 'barang_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('minta.*') ? 'active' : '' }}" href="/minta">
+                                <a class="nav-link {{ Route::is('purchase-requests.*') ? 'active' : '' }}"
+                                   href="{{ route('purchase-requests.index') }}">
                                     <span data-feather="list"></span>
                                     Permintaan Pembelian
                                 </a>
@@ -99,7 +103,8 @@
                     'access_master_manage') !== false || strpos(Session::get('user_access'), 'users_manage') !== false)
                         @can('access', 'users_manage')
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('users.*') ? 'active' : '' }}" href="/users">
+                                <a class="nav-link {{ Route::is('users.*') ? 'active' : '' }}"
+                                   href="{{ route('users.index') }}">
                                     <span data-feather="users"></span>
                                     Users
                                 </a>
@@ -108,7 +113,7 @@
                         @can('access', 'access_group_manage')
                             <li class="nav-item">
                                 <a class="nav-link {{ Route::is('access_groups.*') ? 'active' : '' }}"
-                                   href="/access_group">
+                                   href="{{ route('access_groups.index') }}">
                                     <span data-feather="bar-chart-2"></span>
                                     Group Access
                                 </a>
@@ -117,7 +122,7 @@
                         @can('access', 'access_master_manage')
                             <li class="nav-item">
                                 <a class="nav-link {{ Route::is('access_masters.*') ? 'active' : '' }}"
-                                   href="/access_master">
+                                   href="{{ route('access_masters.index') }}">
                                     <span data-feather="layers"></span>
                                     Access Master
                                 </a>
@@ -153,6 +158,7 @@
 <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
         integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@stack('script');
 <script>
     /* globals feather:false */
     (function () {
@@ -169,7 +175,5 @@
     })()
 </script>
 </body>
-
-@yield('script');
 
 </html>

@@ -19,6 +19,7 @@ class AccessMasterController extends Controller
             return redirect('/');
         }
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +30,9 @@ class AccessMasterController extends Controller
         if (!check_user_access(Session::get('user_access'), 'access_master_manage')) {
             return redirect('/');
         }
-        $data = DB::table('access_master')->get();
 
-        return view('access_master.index',compact('data'));
+        $data = AccessMaster::all();
+        return view('access_master.index', compact('data'));
     }
 
     /**
@@ -52,7 +53,7 @@ class AccessMasterController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -69,6 +70,7 @@ class AccessMasterController extends Controller
         if ($validator->fails()) {
             return redirect()->route('access_masters.create')->withErrors($validator);
         }
+
         $access_master = new AccessMaster();
         $access_master->nama = $request->nama;
         $access_master->keterangan = $request->keterangan;
@@ -82,7 +84,7 @@ class AccessMasterController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -99,7 +101,7 @@ class AccessMasterController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -117,8 +119,8 @@ class AccessMasterController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -150,7 +152,7 @@ class AccessMasterController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

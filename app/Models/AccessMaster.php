@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use App\Models\AccessGroup;
 
 class AccessMaster extends Model
 {

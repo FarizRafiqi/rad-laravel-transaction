@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\MMinta;
+use App\Models\PurchaseRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class MintaController extends Controller
+class PurchaseRequestController extends Controller
 {
     public function __construct()
     {
@@ -29,7 +28,8 @@ class MintaController extends Controller
         if (!check_user_access(Session::get('user_access'), 'minta_manage')) {
             return redirect('/');
         }
-        $data = DB::table('beli_minta')->get();
+
+        $data = PurchaseRequest::all();
         return view('minta.index', compact('data'));
     }
 
@@ -40,13 +40,13 @@ class MintaController extends Controller
      */
     public function create()
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'minta_create')) {
             return redirect('/');
         }
 
         $data['actions'] = 'store';
-        return view('minta.minta', compact('data'));
+        $users = User::all();
+        return view('minta.minta', compact('data', 'users'));
     }
 
     /**
@@ -57,61 +57,56 @@ class MintaController extends Controller
      */
     public function store(Request $request)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'minta_create')) {
             return redirect('/');
         }
 
-        $minta = new MMinta();
-        $minta->created_id = Auth::user()->id;
-        $minta->updated_id = Auth::user()->id;
-        $minta->no_faktur = $request->no_faktur;
-        $minta->id_user_pemohon = $request->id_user_pemohon;
-        $minta->id_user_menyetujui = $request->id_user_menyetujui;
-        $minta->status = $request->status;
-        $minta->tanggal = $request->tanggal;
-        $minta->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
+        $purchaseRequest = new PurchaseRequest();
+        $purchaseRequest->created_id = Auth::user()->id;
+        $purchaseRequest->updated_id = Auth::user()->id;
+        $purchaseRequest->no_faktur = $request->no_faktur;
+        $purchaseRequest->id_user_pemohon = $request->id_user_pemohon;
+        $purchaseRequest->id_user_menyetujui = $request->id_user_menyetujui;
+        $purchaseRequest->status = $request->status;
+        $purchaseRequest->tanggal = $request->tanggal;
+        $purchaseRequest->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
+        $purchaseRequest->save();
 
-
-        $minta->save();
-
-        return redirect()->route('minta.index');
+        return redirect()->route('purchase-requests.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param PurchaseRequest $purchaseRequest
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(PurchaseRequest $purchaseRequest)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'minta_read')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
-        $data['beli_minta'] = MMinta::find($id);
+        $data['beli_minta'] = $purchaseRequest;
+        dd($purchaseRequest);
         return view('minta.show', compact('data'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param PurchaseRequest $purchaseRequest
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(PurchaseRequest $purchaseRequest)
     {
-        //
         if (!check_user_access(Session::get('user_access'), 'minta_update')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
         $data['actions'] = 'update';
-        $data['beli_minta'] = MMinta::find($id);
+        $data['beli_minta'] = $purchaseRequest;
+
         return view('minta.minta', compact('data'));
     }
 
@@ -119,41 +114,38 @@ class MintaController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param PurchaseRequest $purchaseRequest
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, PurchaseRequest $purchaseRequest)
     {
         //
         if (!check_user_access(Session::get('user_access'), 'minta_update')) {
             return redirect('/');
         }
 
-        $id = base64_decode($id);
+        $purchaseRequest->created_id = Auth::user()->id;
+        $purchaseRequest->updated_id = Auth::user()->id;
+        $purchaseRequest->no_faktur = $request->no_faktur;
+        $purchaseRequest->id_user_pemohon = $request->id_user_pemohon;
+        $purchaseRequest->id_user_menyetujui = $request->id_user_menyetujui;
+        $purchaseRequest->status = $request->status;
+        $purchaseRequest->tanggal = $request->tanggal;
+        $purchaseRequest->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
+        $purchaseRequest->save();
 
-        $minta = MMinta::find($id);
-        $minta->created_id = Auth::user()->id;
-        $minta->updated_id = Auth::user()->id;
-        $minta->no_faktur = $request->no_faktur;
-        $minta->id_user_pemohon = $request->id_user_pemohon;
-        $minta->id_user_menyetujui = $request->id_user_menyetujui;
-        $minta->status = $request->status;
-        $minta->tanggal = $request->tanggal;
-        $minta->tanggal_dibutuhkan = $request->tanggal_dibutuhkan;
-
-        $minta->save();
-
-        return redirect()->route('minta.index');
+        return redirect()->route('purchase-requests.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param PurchaseRequest $purchaseRequest
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PurchaseRequest $purchaseRequest)
     {
-        //
+        $purchaseRequest->delete();
+        return redirect()->route('purchase-requests.index');
     }
 }

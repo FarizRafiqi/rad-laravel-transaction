@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MOrder extends Model
+class PurchaseRequest extends Model
 {
     use HasFactory;
-    public $table = 'beli_order';
+
+    public $table = 'beli_minta';
 
     public function user_create()
     {
@@ -18,5 +19,15 @@ class MOrder extends Model
     public function user_update()
     {
         return $this->belongsTo('App\Models\User', 'updated_id', 'id');
+    }
+
+    public function userPemohon()
+    {
+        return $this->belongsTo(User::class, 'id_user_pemohon', 'id');
+    }
+
+    public function userMenyetujui()
+    {
+        return $this->belongsTo(User::class, 'id_user_menyetujui', 'id');
     }
 }
